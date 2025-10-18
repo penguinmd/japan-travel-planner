@@ -511,6 +511,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@octokit/rest@19.0.11/dist/octokit.min.js"></script>
     <script src="config.js"></script>
+    <script src="data-manager.js"></script>
     <script src="auth.js"></script>
     <script>
         async function handleLogin() {
@@ -537,13 +538,26 @@
         }
 
         async function loadData() {
-            // Will implement in Task 5
-            console.log('loadData() called - will implement in Task 5');
+            try {
+                await dataManager.load();
+                console.log('Data loaded successfully:', dataManager.data);
+                renderUI();
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                alert('Failed to load data. Make sure the repository exists and you have access.');
+            }
         }
 
         async function saveData() {
-            // Will implement in Task 5
-            console.log('saveData() called - will implement in Task 5');
+            const success = await dataManager.save();
+            if (success) {
+                alert('Changes saved! The page will auto-update in ~15 seconds via Vercel.');
+            }
+        }
+
+        function renderUI() {
+            // Will implement in next task
+            console.log('Rendering UI with data...');
         }
 
         // Initialize on page load
