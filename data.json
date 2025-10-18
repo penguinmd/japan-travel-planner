@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "lastUpdated": null,
+  "users": {},
+  "favorites": {},
+  "comments": [],
+  "itinerary": {},
+  "budget": {
+    "hotels": [],
+    "food": [],
+    "transport": [],
+    "activities": [],
+    "shopping": []
+  },
+  "photos": []
+}

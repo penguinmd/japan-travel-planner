@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Travel Itinerary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .tip-card, .location-card {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip-card strong, .location-card strong {
+            color: #764ba2;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .hotel-card, .food-card {
+            background: #fff5f7;
+            border-left: 4px solid #f5576c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .hotel-card h4, .food-card h4 {
+            color: #f5576c;
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .map-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .map-link:hover {
+            background: #764ba2;
+            text-decoration: none;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .nav-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .district-tag {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇯🇵 Japan Travel Guide</h1>
+            <p class="subtitle">Your Complete Itinerary & Travel Tips</p>
+        </header>
+
+        <nav>
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search destinations, food, tips...">
+            <div class="nav-grid">
+                <button class="nav-btn active" onclick="showSection('tips')">General Tips</button>
+                <button class="nav-btn" onclick="showSection('trains')">Trains</button>
+                <button class="nav-btn" onclick="showSection('tokyo')">Tokyo</button>
+                <button class="nav-btn" onclick="showSection('kyoto')">Kyoto</button>
+                <button class="nav-btn" onclick="showSection('kinosaki')">Kinosaki</button>
+                <button class="nav-btn" onclick="showSection('osaka')">Osaka</button>
+                <button class="nav-btn" onclick="showSection('kanazawa')">Kanazawa</button>
+            </div>
+        </nav>
+
+        <!-- GENERAL TIPS -->
+        <section id="tips" class="content-section active">
+            <h2>📋 General Tips</h2>
+
+            <div class="tip-card">
+                <strong>🚶 Always wander off the path</strong>
+                Everything is amazing, and the best part is seeing new things that are not crowded by tons of people.
+            </div>
+
+            <div class="tip-card">
+                <strong>🍽️ Restaurant Reservations - Tabelog</strong>
+                In Japan they use <a href="https://tabelog.com" target="_blank">Tabelog</a> for restaurant reviews and reservations (not Yelp or Google). If you really want to go to a specific restaurant, try to get a reservation a few days before. You cannot get same-day reservations often.
+            </div>
+
+            <div class="tip-card">
+                <strong>👟 Wear nice shoes, lots of walking</strong>
+                Get a room with a bathtub - your body will thank you.
+            </div>
+
+            <div class="tip-card">
+                <strong>🎒 Pack light</strong>
+                Travel with a backpack to carry on the flight and a personal item. You'll be going up and down so many stairs that a roller-bag will probably suck.
+            </div>
+
+            <div class="tip-card">
+                <strong>🪙 Getting rid of coins</strong>
+                Go to a 7-11, buy something and throw all your coins in the slot. It will give you back change if you have more coins than the cost of the item.
+            </div>
+
+            <div class="tip-card">
+                <strong>💴 No tipping anywhere</strong>
+                Tipping is considered disrespectful.
+            </div>
+
+            <div class="tip-card">
+                <strong>🤫 Be quiet on trains</strong>
+                People prefer silence.
+            </div>
+
+            <div class="tip-card">
+                <strong>🧴 Always have hand sanitizer</strong>
+                Many bathrooms do not have soap.
+            </div>
+
+            <div class="tip-card">
+                <strong>📱 GET GOOGLE TRANSLATE</strong>
+                You can take pictures of menus, signs, or anything else to translate. You can also download the language so you can use it when you don't have service.
+            </div>
+        </section>
+
+        <!-- TRAINS -->
+        <section id="trains" class="content-section">
+            <h2>🚄 Train Travel</h2>
+
+            <div class="tip-card">
+                <strong>📱 Download the Suica app</strong>
+                The app is red with flowers. Set up your account and add it to your Apple Wallet. You can use Apple Pay to add money onto your Suica card which is used for trains and subways. It will show your remaining balance. You can also use your Suica funds at convenience stores like Apple Pay. <span class="highlight">Set this up during the flights there or before you leave.</span>
+            </div>
+
+            <div class="tip-card">
+                <strong>🎫 Express Tickets & Reserved Seating</strong>
+                Some trains have reserved seating and require an express ticket. You get into the station using your Suica but then need an express ticket. If you don't have a ticket yet, just get on board and buy a ticket from the attendant. <span class="highlight">Do not miss a train just because you don't have a ticket yet.</span> Worst case you end up standing instead of sitting.
+            </div>
+
+            <div class="tip-card">
+                <strong>🗺️ Google Maps > Apple Maps</strong>
+                Travel by train the entire trip. Google Maps will tell you which platform and car to take. Google Maps is better than Apple Maps.
+            </div>
+        </section>
+
+        <!-- TOKYO -->
+        <section id="tokyo" class="content-section">
+            <h2>🗼 Tokyo</h2>
+
+            <h3>🏙️ Areas to Explore</h3>
+
+            <div class="location-card">
+                <strong>Shinjuku</strong>
+                Great area to stay. Love walking around and seeing all the lit-up streets.
+            </div>
+
+            <div class="location-card">
+                <strong>Imperial Palace & Gardens</strong>
+                Lots of history, very pretty. Must visit.
+            </div>
+
+            <div class="location-card">
+                <strong>Shibuya Crossing</strong>
+                Cool to see. If you love to shop brand names, it's a good area. Watch the crossing from the Magnet Building - go to the roof floor (pay a cover and get a drink). Also visit Shibuya Scramble Square for the foodie floor.
+            </div>
+
+            <div class="location-card">
+                <strong>Meiji Jingu Park</strong>
+                Beautiful scenery and some shrines. Walk through on the way to Shibuya.
+            </div>
+
+            <div class="location-card">
+                <strong>Golden Gai</strong>
+                Tons of cool small bars that seat four to ten people. Different themes for each bar. <span class="highlight">Aces Bar recommended</span> - no cover and the owner is really nice.
+                <br>
+                <a href="https://tokyocheapo.com/food-and-drink/quick-guide-golden-gai/" target="_blank" class="map-link">📖 Guide</a>
+                <a href="https://www.tripadvisor.com/Restaurant_Review-g14133667-d6180750-Reviews-Ace_s-Kabukicho_Shinjuku_Tokyo_Tokyo_Prefecture_Kanto.html" target="_blank" class="map-link">📍 Ace's Bar</a>
+            </div>
+
+            <h3>🏨 Hotel</h3>
+            <div class="hotel-card">
+                <h4>Hotel Gracery (Godzilla Head Hotel)</h4>
+                Cool place with a nice location. Super small rooms, but fine because you're out a lot. Close to Omoide Yokocho.
+                <br>
+                <a href="https://maps.app.goo.gl/wB7UVL3vWLX8919p6" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <h3>🍜 Food</h3>
+
+            <div class="food-card">
+                <h4>Tsurutontan Udon Noodle Brasserie Shibuya</h4>
+                Amazing udon place in the Shibuya Scramble Square.
+                <br>
+                <a href="https://www.tripadvisor.com/Restaurant_Review-g1066456-d19306932-Reviews-Tsurutontan_Udon_Noodle_Brasserie_Shibuya-Shibuya_Tokyo_Tokyo_Prefecture_Kanto.html" target="_blank" class="map-link">📍 View Details</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Omoide Yokocho</h4>
+                <span class="highlight">YOU HAVE TO GO</span> - Best yakitori stalls. Two streets filled with different food stalls. You can bounce around or stay at one. Great place for pictures. 10/10 recommend. Come back here several times.
+                <br>
+                <a href="https://maps.app.goo.gl/mF5Cf91j3jeHTRUM6" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Tsukiji Market</h4>
+                Fish, desserts, steak, coffee, matcha, whatever you dream of... it's here. <span class="highlight">Go early.</span> So good.
+            </div>
+
+            <div class="food-card">
+                <h4>Yurakucho Kakida</h4>
+                Amazing set sushi menu. About 15+ pieces of nigiri. Can feel a bit touristy, but amazing fish and you pay a set amount for food and drinks. They give you so much food - lots of variety. Then you get more pieces of your favorite fish at the end.
+                <br>
+                <a href="https://maps.app.goo.gl/WS9FgJU68kd6SrD1A" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Fu-unji Ramen</h4>
+                Waited one hour, but really good. Worth it. Lots of locals waiting in line.
+                <br>
+                <a href="https://www.fu-unji.com/" target="_blank" class="map-link">🌐 Website</a>
+            </div>
+        </section>
+
+        <!-- KYOTO -->
+        <section id="kyoto" class="content-section">
+            <h2>⛩️ Kyoto</h2>
+
+            <p style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                Yes, it's touristy, but still worth seeing. <strong>Go to tourist sites early in the morning (5-6am)</strong> and then wander or relax the rest of the day without an agenda. Kyoto is broken down into different "districts": Gion, Fushimi Inari, and Arashiyama.
+            </p>
+
+            <h3>🏮 Gion District</h3>
+            <span class="district-tag">Historic</span>
+            <span class="district-tag">Temples</span>
+            <span class="district-tag">Geisha</span>
+
+            <div class="location-card">
+                <strong>Hōkan-ji Temple (Yasaka Pagoda)</strong>
+                Go early in the morning or at dusk for less people. Or make a reservation at K36 rooftop bar (long wait without reservation). You can see the Pagoda from the bar - photos and views are stunning.
+                <br>
+                <a href="https://maps.app.goo.gl/iz7h1MeE2zMN2UaM6" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="location-card">
+                <strong>Famous Streets</strong>
+                <ul>
+                    <li><strong>Hanamikoji Street</strong> - Famous Geisha street</li>
+                    <li><strong>Sannenzaka</strong></li>
+                    <li><strong>Ninenzaka</strong> - At the top of Ninenzaka, there's a building with three white umbrellas. Cool local guy paints miniature paintings for ~100 yen each. You should at least go see him!</li>
+                </ul>
+                Wander away from these streets to find cool shots, shops, and places to eat.
+            </div>
+
+            <div class="location-card">
+                <strong>Kiyomizu-dera Temple</strong>
+                Amazing temple that overlooks the city. Visit when you're in the Gion area.
+                <br>
+                <a href="https://maps.app.goo.gl/8g6NaHvfhuiJQRfh6" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <p style="background: #f8f9ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <strong>Pro Tip:</strong> Wake up early and get to the Gion neighborhood around 6am. It's so peaceful and nice to walk the empty streets without being shoulder to shoulder with people. <span class="highlight">GO EARLY AND GET IT DONE.</span> It's like a half day worth of stuff, all close together in one area.
+            </p>
+
+            <h3>🏨 Hotel</h3>
+            <div class="hotel-card">
+                <h4>Crystal Gion Hotel</h4>
+                Loved this hotel - affordable and in old town Gion. About 12-minute walk from Yasaka Pagoda. Close to subway/train station. Stayed four nights and went to other districts. Breakfast included!
+            </div>
+
+            <h3>🍣 Food - Gion Area</h3>
+
+            <div class="food-card">
+                <h4>Hanamichi</h4>
+                Cute lady runs this restaurant, and the food is so good.
+                <br>
+                <a href="https://maps.app.goo.gl/kRLaGHZK7Ca6pH7R7" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Lorimer Kyoto</h4>
+                Wild brunch with fish and tons of random seasonal samples.
+            </div>
+
+            <div class="food-card">
+                <h4>Sushi and Bar Spot</h4>
+                Near Gion hotel. $100 omakase with a bar that seats about ten people. <span class="highlight">100% recommend.</span> Fish and sushi chef were amazing.
+                <br>
+                <a href="https://maps.app.goo.gl/boHjxe9wTS6c5oBD6" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Nishiki Market</h4>
+                Souvenirs, fish, meat, desserts, all in a market. Pretty cool to check out. Had some of the best clams and scallops - they're everywhere.
+            </div>
+
+            <div class="food-card">
+                <h4>Pontocho District</h4>
+                Small alley way with a ton of cool restaurants and bars.
+            </div>
+
+            <div class="food-card">
+                <h4>Pontocho-noichi (Kobe Beef)</h4>
+                Pricey, but if you want certified Kobe beef, this is a good spot for it.
+                <br>
+                <a href="https://kisshokichi-kyoto.com/pontochonoichi/" target="_blank" class="map-link">🌐 Website</a>
+            </div>
+
+            <h3>🎋 Arashiyama District</h3>
+            <span class="district-tag">Bamboo Forest</span>
+            <span class="district-tag">Nature</span>
+            <span class="district-tag">Monkeys</span>
+
+            <div class="location-card">
+                <strong>Monkey Park & Bamboo Forest</strong>
+                Bamboo forest has a cool park on the side that's way better than the bamboo forest itself. Walk down along the water if you keep going south past the park - so pretty and highly recommend. The monkey park is a hike up the mountain to an overlook of the city. Beautiful views and free-roaming monkeys. Lots of shops and restaurants. Got beers and walked around.
+            </div>
+
+            <div class="food-card">
+                <h4>Taisho Hanana - Sea Bream Sashimi</h4>
+                <span class="highlight">YOU HAVE TO GO TO.</span> So good. There will probably be a line but grab a beer from a 7-11 and wait in line. It is so worth it.
+                <br>
+                <a href="https://maps.app.goo.gl/XEGE148kmfDx5Jdu8" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <h3>🦊 Fushimi Inari District</h3>
+            <span class="district-tag">Torii Gates</span>
+            <span class="district-tag">Shrine</span>
+            <span class="district-tag">Hiking</span>
+
+            <div class="location-card">
+                <strong>Fushimi Inari Shrine</strong>
+                Loved it! Uphill hike with tons of orange torii gates. Super busy with tourists, but there are paths you can go down that are less crowded. Look for areas with random torii gates and no one around. Found abandoned areas where we were completely alone. Look for paths marked "not a through loop" - they turn into cool hikes that pop out into residential areas. Tons of street food and shops at the bottom.
+            </div>
+
+            <div class="food-card">
+                <h4>Inari Douhachi</h4>
+                Really good and cheap udon in Fushimi Inari area.
+                <br>
+                <a href="https://maps.app.goo.gl/wdDCpFcVHFu63qVF8" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+        </section>
+
+        <!-- KINOSAKI -->
+        <section id="kinosaki" class="content-section">
+            <h2>♨️ Kinosaki</h2>
+
+            <p style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 1.1em;">
+                <strong>One of my favorite places in Japan. Seriously, you have to go.</strong> It's an onsen town with seven public onsens that are gender separated. You could book a private onsen for ~$60. Did not want to leave. So calm and quiet. Beautiful scenery.
+            </p>
+
+            <div class="hotel-card">
+                <h4>Nishimuraya Hotel</h4>
+                Spent more at this onsen hotel that had two of its own private onsens in the lobby with a sauna and cold plunge. Stayed two nights. This was a lifesaver after walking around Kyoto and Tokyo - our bodies were hurting. This town is quiet and sooo pretty. It's pricey, but you won't regret it. The chef's seasonal dinner was one of the best meals we had.
+                <br><br>
+                <strong>Recommendation:</strong> Do two nights at Nishimuraya Hotel and then move to another hotel in town for another night or two. Loved being able to relax and not run all over the place.
+            </div>
+
+            <h3>🏔️ Activities</h3>
+
+            <div class="location-card">
+                <strong>Cable Car to Mountain Top</strong>
+                Took a cable car up to the top of the mountain and walked down. There's a café at the top where you can get coffees, beers, and hot dogs (hot dogs are a big thing in Japan).
+            </div>
+
+            <h3>🍕 Food</h3>
+
+            <div class="food-card">
+                <h4>Gina Pizza</h4>
+                A great Italian place with some great pasta and pizza.
+                <br>
+                <a href="https://www.google.com/maps/place/462+Kinosakich%C5%8D+Yushima,+Toyooka,+Hyogo+669-6101,+Japan/@35.6254376,134.806381,17z" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+        </section>
+
+        <!-- OSAKA -->
+        <section id="osaka" class="content-section">
+            <h2>🏯 Osaka</h2>
+
+            <p style="background: #f8f9ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                Stay in the <strong>Namba area</strong> if you want to be close to Dotonburi and Kuromon Market. Amazing city to eat a lot of good food. They have whale sharks at the aquarium (buy tickets in advance or wait ~2 hours).
+            </p>
+
+            <div class="hotel-card">
+                <h4>APA Namba Ekamai Hotel</h4>
+                Too many people, heat wouldn't turn off. Super small room, but barely there so it was fine. Would not book here again at this specific hotel but loved the location. If you can stay in this area, you should.
+            </div>
+
+            <h3>🍢 Dotonburi (Insane Food District)</h3>
+            <span class="district-tag">Street Food</span>
+            <span class="district-tag">Must Visit</span>
+
+            <p style="margin: 15px 0;">Ended up spending a lot of time here because of all the amazing food options.</p>
+
+            <div class="food-card">
+                <h4>Teppan Jinja (Teppan-grilled skewers)</h4>
+                <span class="highlight">MUST TRY</span> - Seriously so good if you want different beef, chicken, pork options. <strong>Went here twice because the hype is real.</strong>
+                <br>
+                <a href="https://maps.app.goo.gl/oZA1gKZa3yrzASRz8" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Street Food</h4>
+                Can't go wrong with the street food here. Tried a lot of places. <strong>Takoyaki and pufferfish are huge here.</strong> Takoyaki places have huge octopus sculptures on the outside. Good stand right next to Teppan Jinja.
+            </div>
+
+            <h3>🐟 Osaka Kuromon Market</h3>
+            <span class="district-tag">Best Market Ever</span>
+            <span class="district-tag">Fresh Fish</span>
+
+            <div class="food-card">
+                <h4>Suehiro</h4>
+                Great sushi and hand rolls. Has a grab-and-go or sit down at the bar.
+                <br>
+                <a href="https://maps.app.goo.gl/KLm6x9DAAkLwQVFR9" target="_blank" class="map-link">📍 View on Map</a>
+                <br>
+                <small>21-33, Nippombashi 1-Chōme, Chuo, Osaka</small>
+            </div>
+
+            <div class="food-card">
+                <h4>Entoki Kuromon</h4>
+                <span class="highlight">BEST TUNA</span> - Serves nigiri sampler of different parts of the tuna. <strong>This booth will live in my mind and heart until the end of time.</strong>
+                <br>
+                <a href="https://maps.app.goo.gl/M8eTX6B1BPgQPQSa6" target="_blank" class="map-link">📍 View on Map</a>
+                <a href="https://entoki.com/" target="_blank" class="map-link">🌐 Website</a>
+            </div>
+
+            <p style="margin-top: 15px;">Ate at so many stalls. The above two were favorites. Everything else was good, but not as amazing as those.</p>
+        </section>
+
+        <!-- KANAZAWA -->
+        <section id="kanazawa" class="content-section">
+            <h2>🏰 Kanazawa</h2>
+
+            <p style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <strong>Would go back to Kanazawa again.</strong> It's beautiful and is like a less crowded Kyoto. If you don't want to go to a tourist city, go here! There's a massive castle in the middle of the city - Kanazawa Castle. You can tour different parts of it and buy tickets to a garden next to it that is stunning.
+            </p>
+
+            <div class="location-card">
+                <strong>Kanazawa Castle</strong>
+                Tour the castle and visit the stunning garden next to it.
+                <br>
+                <a href="https://maps.app.goo.gl/PfDwtB21FuRiFfae8" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <h3>🏨 Hotel</h3>
+            <div class="hotel-card">
+                <h4>Tokyu Stay Kanazawa</h4>
+                Loved it and it was super affordable. The location was good too.
+                <br>
+                <a href="https://www.google.com/travel/search?ts=CAEaSQopEicyJTB4NWZmODMzNmZjYTc0NTJiZjoweGRjMzhkYjkyMWJlYWMzNzESHBIUCgcI6Q8QBxgbEgcI6Q8QBxgcGAEyBAgAEAAqBwoFOgNVU0Q" target="_blank" class="map-link">🌐 View Hotel</a>
+            </div>
+
+            <h3>🍷 Food & Drink</h3>
+
+            <div class="food-card">
+                <h4>Uva Uva (Italian/Japanese Fusion)</h4>
+                Found this place wandering. Italian/Japanese fusion with set menu and seasonal ingredients. Italian sashimi and tempura. Squid pomodoro was good. The owner is a cute lady who is a sommelier and showed great wines.
+                <br>
+                <a href="https://uvauva-romanza.jp" target="_blank" class="map-link">🌐 Website</a>
+                <a href="https://maps.app.goo.gl/tWkANjJui7gXxfE69" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Ramen Mikoshi</h4>
+                Was okay.
+                <br>
+                <a href="https://maps.app.goo.gl/eNz3MgzFC1qVyQVEA" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Furansu Cocktail Bar</h4>
+                <a href="https://maps.app.goo.gl/9VQVbYkng9vMkxoJ6" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <h3>🍶 Higashi Chaya District</h3>
+            <span class="district-tag">Old Town</span>
+            <span class="district-tag">Sake</span>
+
+            <div class="location-card">
+                <strong>Higashi Chaya District</strong>
+                An old town district with shops, bars, and restaurants. There's a river that runs by it that's beautiful to walk down. Did a sake tasting and got Donburi bowls.
+            </div>
+
+            <div class="food-card">
+                <h4>Fukumitsuya Higashi (Sake Bar)</h4>
+                <a href="https://maps.app.goo.gl/dkmm6chdRkLFs9cF8" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+
+            <div class="food-card">
+                <h4>Higashiyama Yoshi (Donburi Bowls)</h4>
+                So good!
+                <br>
+                <a href="https://maps.app.goo.gl/MqEARfKoKxf56u6h9" target="_blank" class="map-link">📍 View on Map</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Search functionality
+        const searchBox = document.getElementById('searchBox');
+        searchBox.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.content-section');
+
+            if (searchTerm === '') {
+                // Reset to show only tips section if search is empty
+                sections.forEach(section => section.classList.remove('active'));
+                document.getElementById('tips').classList.add('active');
+                return;
+            }
+
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
