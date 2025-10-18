@@ -8,6 +8,6 @@ const CONFIG = {
     clientId: 'YOUR_GITHUB_OAUTH_CLIENT_ID' // Will be set up later
   },
   vercel: {
-    url: 'https://japan-2tyf0hxng-mark-rasmussens-projects.vercel.app' // Update after deployment
+    url: 'https://japan-cyan.vercel.app' // Update after deployment
   }
 };

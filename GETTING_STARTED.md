@@ -2,7 +2,7 @@
 
 ## ✅ Your App is LIVE!
 
-**Live URL:** https://japan-2tyf0hxng-mark-rasmussens-projects.vercel.app
+**Live URL:** https://japan-cyan.vercel.app
 
 **GitHub Repository:** https://github.com/penguinmd/japan-travel-planner
 
@@ -22,7 +22,7 @@ You can use your existing token OR create a new one specifically for this app:
 
 ### Step 2: Login to the App
 
-1. Visit: https://japan-2tyf0hxng-mark-rasmussens-projects.vercel.app
+1. Visit: https://japan-cyan.vercel.app
 2. Click "Login with GitHub"
 3. Paste your token when prompted
 4. You're in! 🎉
@@ -60,7 +60,7 @@ Send your friend these instructions:
    - Note: "Japan Travel App"
    - Scope: ☑️ repo
    - Generate and copy token
-4. **Visit the app**: https://japan-2tyf0hxng-mark-rasmussens-projects.vercel.app
+4. **Visit the app**: https://japan-cyan.vercel.app
 5. **Login** with their token
 6. **Start collaborating!**
 
