@@ -13,6 +13,19 @@
             <p class="subtitle">Your Complete Itinerary & Travel Tips</p>
         </header>
 
+        <div id="auth-container" style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; text-align: center;">
+            <div id="logged-out-view">
+                <p>Login to collaborate on this trip!</p>
+                <button onclick="handleLogin()" class="nav-btn">Login with GitHub</button>
+            </div>
+            <div id="logged-in-view" style="display: none;">
+                <img id="user-avatar" src="" alt="" style="width: 40px; height: 40px; border-radius: 50%; vertical-align: middle; margin-right: 10px;">
+                <span id="user-name"></span>
+                <button onclick="handleLogout()" class="nav-btn" style="margin-left: 20px; background: #f5576c;">Logout</button>
+                <button onclick="saveData()" class="nav-btn" style="margin-left: 10px; background: #4CAF50;">Save Changes</button>
+            </div>
+        </div>
+
         <nav>
             <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search destinations, food, tips...">
             <div class="nav-grid">
@@ -498,6 +511,49 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@octokit/rest@19.0.11/dist/octokit.min.js"></script>
     <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        async function handleLogin() {
+            const success = await auth.login();
+            if (success) {
+                updateAuthUI();
+                await loadData();
+            }
+        }
+
+        function handleLogout() {
+            auth.logout();
+        }
+
+        function updateAuthUI() {
+            const loggedIn = auth.isAuthenticated();
+            document.getElementById('logged-out-view').style.display = loggedIn ? 'none' : 'block';
+            document.getElementById('logged-in-view').style.display = loggedIn ? 'block' : 'none';
+
+            if (loggedIn) {
+                document.getElementById('user-avatar').src = auth.user.avatar;
+                document.getElementById('user-name').textContent = auth.user.name;
+            }
+        }
+
+        async function loadData() {
+            // Will implement in Task 5
+            console.log('loadData() called - will implement in Task 5');
+        }
+
+        async function saveData() {
+            // Will implement in Task 5
+            console.log('saveData() called - will implement in Task 5');
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            if (auth.isAuthenticated()) {
+                loadData();
+            }
+        });
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
