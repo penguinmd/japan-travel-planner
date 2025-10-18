@@ -518,6 +518,7 @@
     <script src="ui-components.js"></script>
     <script src="itinerary.js"></script>
     <script src="budget.js"></script>
+    <script src="photos.js"></script>
     <script>
         async function handleLogin() {
             const success = await auth.login();
@@ -564,6 +565,19 @@
             if (!dataManager.data) return;
             addInteractiveFeatures();
             renderAllBudgetCategories();
+
+            // Render all photos
+            document.querySelectorAll('.location-card, .food-card, .hotel-card').forEach(card => {
+                const titleElement = card.querySelector('strong, h4');
+                if (!titleElement) return;
+
+                const locationId = titleElement.textContent
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '');
+
+                renderPhotosForLocation(locationId);
+            });
         }
 
         // Initialize on page load

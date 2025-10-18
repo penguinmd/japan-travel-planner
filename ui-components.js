@@ -104,9 +104,23 @@ function addInteractiveFeatures() {
     commentsDiv.style.marginTop = '10px';
     card.appendChild(commentsDiv);
 
+    // Add photo upload button
+    const photoUploadBtn = createPhotoUploadButton(locationId);
+    card.appendChild(photoUploadBtn);
+
+    // Add photos container
+    const photosDiv = document.createElement('div');
+    photosDiv.id = `photos-${locationId}`;
+    card.appendChild(photosDiv);
+
     // Render existing comments
     if (dataManager.data) {
       renderCommentsForLocation(locationId);
+    }
+
+    // Render existing photos
+    if (dataManager.data) {
+      renderPhotosForLocation(locationId);
     }
   });
 }
