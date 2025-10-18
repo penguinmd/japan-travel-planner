@@ -1,7 +1,7 @@
 // config.js
 const CONFIG = {
   github: {
-    owner: 'YOUR_GITHUB_USERNAME', // Update this
+    owner: 'penguinmd', // Update this
     repo: 'japan-travel-planner',
     branch: 'main',
     dataFile: 'data.json',
