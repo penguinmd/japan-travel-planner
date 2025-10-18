@@ -37,6 +37,7 @@
                 <button class="nav-btn" onclick="showSection('osaka')">Osaka</button>
                 <button class="nav-btn" onclick="showSection('kanazawa')">Kanazawa</button>
                 <button class="nav-btn" onclick="showSection('itinerary-planner')">Itinerary</button>
+                <button class="nav-btn" onclick="showSection('budget-tracker')">Budget</button>
             </div>
         </nav>
 
@@ -516,6 +517,7 @@
     <script src="auth.js"></script>
     <script src="ui-components.js"></script>
     <script src="itinerary.js"></script>
+    <script src="budget.js"></script>
     <script>
         async function handleLogin() {
             const success = await auth.login();
@@ -561,6 +563,7 @@
         function renderUI() {
             if (!dataManager.data) return;
             addInteractiveFeatures();
+            renderAllBudgetCategories();
         }
 
         // Initialize on page load
@@ -574,6 +577,10 @@
             const kanazawaSection = document.getElementById('kanazawa');
             const itinerarySection = createItinerarySection();
             kanazawaSection.parentNode.insertBefore(itinerarySection, kanazawaSection.nextSibling);
+
+            // Add budget section after itinerary section
+            const budgetSection = createBudgetSection();
+            itinerarySection.parentNode.insertBefore(budgetSection, itinerarySection.nextSibling);
         });
     </script>
     <script src="app.js"></script>
