@@ -826,7 +826,8 @@
                 renderUI();
             } catch (error) {
                 console.error('Failed to load data:', error);
-                alert('Failed to load data. Make sure the repository exists and you have access.');
+                // Data loading shouldn't fail with localStorage, but log it if it does
+                console.warn('Data initialized with empty structure');
             }
         }
 
