@@ -32,8 +32,15 @@ CREATE POLICY "Anyone can update trip data"
   USING (true)
   WITH CHECK (true);
 
+-- Note: INSERT and DELETE policies are intentionally omitted
+-- This is a singleton table with exactly one row for collaborative trip planning
+-- The single row is created below and should never be deleted or additional rows inserted
+-- All updates happen via the UPDATE policy above
+
 -- Insert initial row (only one row will exist)
-INSERT INTO trip_data (id) VALUES ('00000000-0000-0000-0000-000000000001');
+-- Using ON CONFLICT DO NOTHING for idempotent schema application
+INSERT INTO trip_data (id) VALUES ('00000000-0000-0000-0000-000000000001')
+  ON CONFLICT (id) DO NOTHING;
 
 -- Enable realtime
 ALTER PUBLICATION supabase_realtime ADD TABLE trip_data;
