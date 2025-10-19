@@ -1,4 +1,4 @@
-// maps.js - Multi-marker map generator using Leaflet.js
+// maps.js - Single map instance with city-based updates
 
 const cityLocations = {
     tokyo: [
@@ -43,159 +43,108 @@ const cityLocations = {
     ]
 };
 
-// Custom map marker icon
-const customIcon = L.divIcon({
-    className: 'custom-marker',
-    html: '<div style="background: var(--accent-secondary); width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"><div style="transform: rotate(45deg); color: white; font-weight: bold; text-align: center; line-height: 24px; font-size: 14px;"></div></div>',
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
-    popupAnchor: [0, -30]
-});
+// Global map instance
+let mainMapInstance = null;
+let currentCityMarkers = [];
 
-// Create and initialize a map for a city
-function createCityMap(cityKey) {
-    const locations = cityLocations[cityKey];
-    if (!locations || locations.length === 0) return;
+// Initialize single map instance
+function initializeMainMap() {
+    if (mainMapInstance) {
+        return; // Already initialized
+    }
 
-    const mapId = `map-${cityKey}`;
-    const mapElement = document.getElementById(mapId);
-    if (!mapElement) return;
+    const mapElement = document.getElementById('main-map');
+    if (!mapElement) {
+        console.error('Map container not found');
+        return;
+    }
 
-    // Calculate center point
-    const avgLat = locations.reduce((sum, loc) => sum + loc.lat, 0) / locations.length;
-    const avgLng = locations.reduce((sum, loc) => sum + loc.lng, 0) / locations.length;
-
-    // Create map
-    const map = L.map(mapId, {
+    // Create map centered on Japan
+    mainMapInstance = L.map('main-map', {
         zoomControl: true,
         scrollWheelZoom: true
-    }).setView([avgLat, avgLng], 13);
+    }).setView([36.2048, 138.2529], 6); // Center of Japan
 
-    // Add map tile layer - using CartoDB Dark Matter for dark mode compatibility
-    const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Add dark tile layer - CartoDB Dark Matter
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 20
-    });
+    }).addTo(mainMapInstance);
 
-    tileLayer.addTo(map);
-
-    // Error handling for tile loading
-    tileLayer.on('tileerror', function(error) {
+    // Error handling
+    mainMapInstance.on('tileerror', function(error) {
         console.warn('Tile loading error:', error);
     });
+}
 
-    // Add markers for each location
-    locations.forEach((loc, index) => {
-        const marker = L.marker([loc.lat, loc.lng], {
-            icon: L.divIcon({
-                className: 'custom-marker',
-                html: `<div style="background: var(--accent-secondary); width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">${index + 1}</div>`,
-                iconSize: [32, 32],
-                iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
-            })
-        }).addTo(map);
+// Update map to show specific city
+function updateMapForCity(cityKey) {
+    if (!mainMapInstance) {
+        initializeMainMap();
+    }
 
-        // Create popup with location name and link
-        const popupContent = `
-            <div style="color: #000; min-width: 150px;">
-                <strong style="font-size: 14px; display: block; margin-bottom: 8px;">${index + 1}. ${loc.name}</strong>
-                <a href="https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lng}"
-                   target="_blank"
-                   style="color: var(--accent-primary); text-decoration: none; font-size: 12px;">
-                    📍 Open in Google Maps →
-                </a>
-            </div>
-        `;
-        marker.bindPopup(popupContent);
+    const locations = cityLocations[cityKey];
+    if (!locations) {
+        console.warn('No locations for city:', cityKey);
+        return;
+    }
+
+    // Clear existing markers
+    currentCityMarkers.forEach(marker => marker.remove());
+    currentCityMarkers = [];
+
+    // Calculate center
+    const avgLat = locations.reduce((sum, loc) => sum + loc.lat, 0) / locations.length;
+    const avgLng = locations.reduce((sum, loc) => sum + loc.lng, 0) / locations.length;
+
+    // Fly to city with animation
+    mainMapInstance.flyTo([avgLat, avgLng], 13, {
+        duration: 1.5,
+        easeLinearity: 0.25
     });
 
-    // Fit bounds to show all markers with generous padding
-    const bounds = L.latLngBounds(locations.map(loc => [loc.lat, loc.lng]));
-    map.fitBounds(bounds, {
-        padding: [80, 80],
-        maxZoom: 14  // Prevent zooming in too close
-    });
-
-    // Force map to invalidate size and recalculate after a moment
+    // Add markers after animation starts
     setTimeout(() => {
-        map.invalidateSize();
-        map.fitBounds(bounds, {
+        locations.forEach((loc, index) => {
+            const marker = L.marker([loc.lat, loc.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background: var(--accent-secondary); width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">${index + 1}</div>`,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32]
+                })
+            }).addTo(mainMapInstance);
+
+            // Click opens Google Maps in new tab
+            marker.on('click', () => {
+                window.open(`https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lng}`, '_blank');
+            });
+
+            // Hover shows tooltip
+            marker.bindTooltip(loc.name, {
+                permanent: false,
+                direction: 'top'
+            });
+
+            currentCityMarkers.push(marker);
+        });
+
+        // Fit bounds to show all markers
+        const bounds = L.latLngBounds(locations.map(loc => [loc.lat, loc.lng]));
+        mainMapInstance.fitBounds(bounds, {
             padding: [80, 80],
             maxZoom: 14
         });
-    }, 250);
+    }, 800);
 }
 
-// Create map HTML structure
-function createCityMapHTML(cityKey) {
-    const locations = cityLocations[cityKey];
-    if (!locations) return '';
-
-    const cityName = cityKey.charAt(0).toUpperCase() + cityKey.slice(1);
-
-    return `
-        <div style="background: var(--bg-tertiary); border-radius: 12px; padding: 24px; margin-bottom: 30px; border: 1px solid var(--border);">
-            <h3 style="margin-top: 0; color: var(--accent-primary);">📍 ${cityName} - All Locations</h3>
-
-            <!-- Location legend -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 20px;">
-                ${locations.map((loc, i) => `
-                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.9em;">
-                        <div style="background: var(--accent-secondary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex-shrink: 0;">${i + 1}</div>
-                        <span style="color: var(--text-primary);">${loc.name}</span>
-                    </div>
-                `).join('')}
-            </div>
-
-            <!-- Map container -->
-            <div id="map-${cityKey}" style="height: 600px; border-radius: 8px; border: 1px solid var(--border); z-index: 1;"></div>
-
-            <p style="margin: 12px 0 0 0; font-size: 0.85em; color: var(--text-secondary);">
-                💡 Click any marker on the map to see details and get directions
-            </p>
-        </div>
-    `;
-}
-
-// Initialize all maps
-function initializeMaps() {
-    Object.keys(cityLocations).forEach(cityKey => {
-        const section = document.getElementById(cityKey);
-        if (section) {
-            // Find existing map container or create new one
-            let mapContainer = section.querySelector('.city-map-container');
-
-            // Remove old map if exists
-            const oldMapDiv = section.querySelector(`div[style*="background: #f8f9ff"]`);
-            if (oldMapDiv) {
-                oldMapDiv.remove();
-            }
-
-            if (!mapContainer) {
-                mapContainer = document.createElement('div');
-                mapContainer.className = 'city-map-container';
-                // Insert after h2
-                const h2 = section.querySelector('h2');
-                if (h2) {
-                    h2.parentNode.insertBefore(mapContainer, h2.nextSibling);
-                }
-            }
-
-            mapContainer.innerHTML = createCityMapHTML(cityKey);
-
-            // Initialize the map after a short delay to ensure DOM is ready
-            setTimeout(() => createCityMap(cityKey), 100);
-        }
-    });
-}
-
-// Call initialization when DOM and Leaflet are ready
+// Call initialization when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(initializeMaps, 500);
+        setTimeout(initializeMainMap, 100);
     });
 } else {
-    setTimeout(initializeMaps, 500);
+    setTimeout(initializeMainMap, 100);
 }
