@@ -1,489 +1,742 @@
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0f0f23;
-            --bg-secondary: #1a1a2e;
-            --bg-tertiary: #16213e;
-            --accent-primary: #00d4ff;
-            --accent-secondary: #ff6b9d;
-            --text-primary: #e4e4e7;
-            --text-secondary: #a1a1aa;
-            --border: rgba(255, 255, 255, 0.1);
-            --shadow: rgba(0, 0, 0, 0.5);
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background: var(--bg-primary);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Split-screen layout */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 60% 40%;
-            gap: 24px;
-            align-items: start;
-        }
-
-        .content-panel {
-            overflow-y: visible;
-        }
-
-        .map-panel {
-            position: sticky;
-            top: 20px;
-            height: calc(100vh - 120px);
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            padding: 20px;
-            box-shadow: 0 8px 32px var(--shadow);
-        }
-
-        .map-container {
-            height: calc(100% - 60px);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
-        .map-header {
-            margin-bottom: 16px;
-        }
-
-        .map-title {
-            color: var(--accent-primary);
-            font-size: 1.3em;
-            font-weight: 600;
-            margin: 0 0 8px 0;
-        }
-
-        .map-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.9em;
-            margin: 0;
-        }
-
-        header {
-            text-align: center;
-            padding: 60px 20px 40px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 157, 0.1) 100%);
-            border-radius: 20px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border);
-        }
-
-        h1 {
-            font-size: 3.5em;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-
-        .subtitle {
-            font-size: 1.2em;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        nav {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 32px var(--shadow);
-            margin-bottom: 30px;
-            padding: 24px;
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-        }
-
-        .nav-btn {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            padding: 14px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.95em;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
-            border-color: var(--accent-primary);
-            background: rgba(0, 212, 255, 0.1);
-        }
-
-        .nav-btn.active {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-color: transparent;
-            color: #000;
-            font-weight: 700;
-        }
-
-        .content-section {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 32px var(--shadow);
-            padding: 40px;
-            margin-bottom: 30px;
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h2 {
-            color: var(--accent-primary);
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        h3 {
-            color: var(--text-primary);
-            font-size: 1.8em;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .tip-card, .location-card {
-            background: var(--bg-tertiary);
-            border-left: 4px solid var(--accent-primary);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .tip-card:hover, .location-card:hover {
-            transform: translateX(4px);
-            border-left-color: var(--accent-secondary);
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
-        }
-
-        .tip-card strong, .location-card strong {
-            color: var(--accent-primary);
-            display: block;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-        }
-
-        .hotel-card, .food-card {
-            background: var(--bg-tertiary);
-            border-left: 4px solid var(--accent-secondary);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .hotel-card:hover, .food-card:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.2);
-        }
-
-        .hotel-card h4, .food-card h4 {
-            color: var(--accent-secondary);
-            margin-bottom: 12px;
-            font-size: 1.2em;
-        }
-
-        a {
-            color: var(--accent-primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--accent-secondary);
-            text-decoration: underline;
-        }
-
-        ul {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-
-        li {
-            margin: 10px 0;
-            color: var(--text-secondary);
-        }
-
-        .map-link {
-            display: inline-block;
-            background: var(--bg-tertiary);
-            color: var(--accent-primary);
-            padding: 10px 18px;
-            border-radius: 8px;
-            margin: 8px 8px 8px 0;
-            font-size: 0.9em;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .map-link:hover {
-            background: rgba(0, 212, 255, 0.15);
-            border-color: var(--accent-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
-            text-decoration: none;
-        }
-
-        .highlight {
-            background: rgba(255, 107, 157, 0.2);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            color: var(--accent-secondary);
-            border: 1px solid rgba(255, 107, 157, 0.3);
-        }
-
-        .icon {
-            margin-right: 8px;
-        }
-
-        /* Responsive: stack on mobile */
-        @media (max-width: 1024px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .map-panel {
-                position: relative;
-                top: 0;
-                height: 500px;
-                order: -1; /* Map appears above content on mobile */
-            }
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5em;
-            }
-
-            .nav-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
-
-            .content-section {
-                padding: 24px;
-            }
-
-            h2 {
-                font-size: 2em;
-            }
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 14px 18px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 1em;
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-        }
-
-        .search-box::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .district-tag {
-            display: inline-block;
-            background: var(--bg-tertiary);
-            color: var(--accent-primary);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border);
-            font-weight: 600;
-        }
-
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--bg-tertiary);
-            border-radius: 6px;
-            border: 2px solid var(--bg-primary);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-primary);
-        }
-
-        /* Smooth selection */
-        ::selection {
-            background: rgba(0, 212, 255, 0.3);
-            color: var(--text-primary);
-        }
-
-        /* Leaflet map custom styles */
-        .leaflet-container {
-            background: var(--bg-tertiary);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        .leaflet-popup-content-wrapper {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .leaflet-popup-tip {
-            background: white;
-        }
-
-        .custom-marker {
-            background: transparent;
-            border: none;
-        }
-
-        .leaflet-control-zoom a {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .leaflet-control-zoom a:hover {
-            background: var(--bg-secondary);
-            border-color: var(--accent-primary);
-        }
-
-        .leaflet-control-attribution {
-            background: rgba(26, 26, 46, 0.8);
-            color: var(--text-secondary);
-            font-size: 10px;
-        }
-
-        .leaflet-control-attribution a {
-            color: var(--accent-primary);
-        }
-
-        /* Location number badges */
-        .location-number {
-            display: inline-block;
-            background: var(--accent-secondary);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 24px;
-            font-size: 0.85em;
-            font-weight: bold;
-            margin-right: 8px;
-            vertical-align: middle;
-            transition: all 0.2s ease;
-        }
-
-        /* Enhanced hover effects for location cards */
-        .location-card:hover {
-            border-left-color: var(--accent-primary);
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
-            cursor: pointer;
-            transform: translateX(8px);
-        }
-
-        .location-card:hover .location-number {
-            background: var(--accent-primary);
-            transform: scale(1.15);
-        }
-
-        /* Highlighted map pin with pulse animation */
-        .map-pin-highlighted {
-            background: var(--accent-primary);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 4px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            animation: pulse 1s infinite;
-            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.6);
-        }
-
-        /* Pulse animation for highlighted pins */
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 4px 16px rgba(0, 212, 255, 0.6);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 4px 24px rgba(0, 212, 255, 0.9);
-                transform: scale(1.05);
-            }
-            100% {
-                box-shadow: 0 4px 16px rgba(0, 212, 255, 0.6);
-                transform: scale(1);
-            }
-        }
+/* ============================================
+   JAPANESE-INSPIRED DESIGN SYSTEM
+   Principles: Ma (negative space), Wabi-sabi (elegant simplicity)
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Background colors - inspired by natural materials */
+    --bg-primary: #1a1a1d;        /* Charcoal (sumi ink) */
+    --bg-secondary: #2b2b2e;      /* Ash gray */
+    --bg-tertiary: #363639;       /* Stone gray */
+    --bg-elevated: #3f3f42;       /* Elevated surfaces */
+
+    /* Accent colors - refined, nature-inspired */
+    --accent-sakura: #d4a5a5;     /* Muted cherry blossom */
+    --accent-matcha: #7d8f69;     /* Soft matcha green */
+    --accent-sumi: #4a5568;       /* Ink gray-blue */
+    --accent-gold: #c9a961;       /* Subdued gold (kintsugi) */
+    --accent-indigo: #5d5d81;     /* Japanese indigo */
+
+    /* Text colors */
+    --text-primary: #f5f5f5;      /* Off-white (washi paper) */
+    --text-secondary: #b4b4b8;    /* Medium gray */
+    --text-tertiary: #8a8a8f;     /* Subtle gray */
+
+    /* Borders & effects */
+    --border-subtle: rgba(201, 169, 97, 0.12);
+    --border-emphasis: rgba(201, 169, 97, 0.25);
+    --shadow-soft: rgba(0, 0, 0, 0.2);
+    --shadow-medium: rgba(0, 0, 0, 0.35);
+
+    /* Typography */
+    --font-size-h1: 3.25em;
+    --font-size-h2: 2.25em;
+    --font-size-h3: 1.65em;
+    --line-height-base: 1.75;
+    --letter-spacing-tight: -0.015em;
+    --letter-spacing-normal: 0.005em;
+}
+
+body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    line-height: var(--line-height-base);
+    letter-spacing: var(--letter-spacing-normal);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* ============================================
+   SPLIT-SCREEN LAYOUT
+   ============================================ */
+.main-layout {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 32px;
+    align-items: start;
+}
+
+.content-panel {
+    overflow-y: visible;
+}
+
+.map-panel {
+    position: sticky;
+    top: 24px;
+    height: calc(100vh - 120px);
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    padding: 24px;
+    box-shadow: 0 4px 24px var(--shadow-soft);
+    transition: box-shadow 0.4s ease;
+}
+
+.map-panel:hover {
+    box-shadow: 0 8px 32px var(--shadow-medium);
+}
+
+.map-container {
+    height: calc(100% - 60px);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+}
+
+.map-header {
+    margin-bottom: 20px;
+}
+
+.map-title {
+    color: var(--accent-gold);
+    font-size: 1.3em;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.map-subtitle {
+    color: var(--text-tertiary);
+    font-size: 0.9em;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* ============================================
+   HEADER - Refined elegance
+   ============================================ */
+header {
+    text-align: center;
+    padding: 60px 32px 50px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border-subtle);
+    border-top: 3px solid var(--accent-gold);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle texture overlay (optional - very subtle) */
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(245, 245, 245, 0.01) 2px,
+            rgba(245, 245, 245, 0.01) 4px
+        );
+    pointer-events: none;
+}
+
+h1 {
+    font-size: var(--font-size-h1);
+    margin-bottom: 12px;
+    color: var(--accent-gold);
+    font-weight: 400;
+    letter-spacing: var(--letter-spacing-tight);
+    position: relative;
+}
+
+.subtitle {
+    font-size: 1.15em;
+    color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+}
+
+/* ============================================
+   NAVIGATION - Clean and refined
+   ============================================ */
+nav {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 2px 16px var(--shadow-soft);
+    margin-bottom: 32px;
+    padding: 24px;
+    position: sticky;
+    top: 24px;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.nav-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    padding: 14px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-btn:hover {
+    background: var(--bg-elevated);
+    border-color: var(--accent-gold);
+    box-shadow: 0 2px 12px rgba(201, 169, 97, 0.15);
+    transform: translateY(-1px);
+}
+
+.nav-btn.active {
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-weight: 500;
+    box-shadow: 0 0 0 1px rgba(201, 169, 97, 0.2);
+}
+
+/* ============================================
+   CONTENT SECTIONS - Embrace Ma (negative space)
+   ============================================ */
+.content-section {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 2px 16px var(--shadow-soft);
+    padding: 48px;
+    margin-bottom: 32px;
+    display: none;
+    animation: fadeInContent 0.6s ease;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2 {
+    color: var(--accent-gold);
+    font-size: var(--font-size-h2);
+    margin-bottom: 36px;
+    font-weight: 400;
+    letter-spacing: var(--letter-spacing-tight);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+}
+
+h3 {
+    color: var(--text-primary);
+    font-size: var(--font-size-h3);
+    margin-top: 48px;
+    margin-bottom: 24px;
+    font-weight: 400;
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+/* ============================================
+   CARDS - Refined with subtle accents
+   ============================================ */
+
+/* Location cards - matcha accent */
+.location-card {
+    background: var(--bg-tertiary);
+    border-top: 2px solid var(--accent-matcha);
+    border-radius: 6px;
+    padding: 24px;
+    margin: 20px 0;
+    border: 1px solid var(--border-subtle);
+    border-top: 2px solid var(--accent-matcha);
+    transition: all 0.35s ease;
+    position: relative;
+}
+
+.location-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-matcha);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.location-card:hover {
+    box-shadow: 0 6px 20px rgba(125, 143, 105, 0.12);
+    border-top-color: var(--accent-matcha);
+    transform: translateY(-2px);
+}
+
+.location-card:hover::before {
+    opacity: 0.6;
+}
+
+.location-card strong {
+    color: var(--accent-matcha);
+    display: block;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+/* Tip cards - gold accent */
+.tip-card {
+    background: var(--bg-tertiary);
+    border-top: 2px solid var(--accent-gold);
+    border-radius: 6px;
+    padding: 24px;
+    margin: 20px 0;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.35s ease;
+    position: relative;
+}
+
+.tip-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-gold);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.tip-card:hover {
+    box-shadow: 0 6px 20px rgba(201, 169, 97, 0.12);
+    transform: translateY(-2px);
+}
+
+.tip-card:hover::before {
+    opacity: 0.6;
+}
+
+.tip-card strong {
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+/* Food cards - sakura accent */
+.food-card {
+    background: var(--bg-tertiary);
+    border-top: 2px solid var(--accent-sakura);
+    border-radius: 6px;
+    padding: 24px;
+    margin: 20px 0;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.35s ease;
+    position: relative;
+}
+
+.food-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-sakura);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.food-card:hover {
+    box-shadow: 0 6px 20px rgba(212, 165, 165, 0.12);
+    transform: translateY(-2px);
+}
+
+.food-card:hover::before {
+    opacity: 0.6;
+}
+
+.food-card h4 {
+    color: var(--accent-sakura);
+    margin-bottom: 12px;
+    font-size: 1.15em;
+    font-weight: 500;
+}
+
+/* Hotel cards - indigo accent */
+.hotel-card {
+    background: var(--bg-tertiary);
+    border-top: 2px solid var(--accent-indigo);
+    border-radius: 6px;
+    padding: 24px;
+    margin: 20px 0;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.35s ease;
+    position: relative;
+}
+
+.hotel-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-indigo);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.hotel-card:hover {
+    box-shadow: 0 6px 20px rgba(93, 93, 129, 0.12);
+    transform: translateY(-2px);
+}
+
+.hotel-card:hover::before {
+    opacity: 0.6;
+}
+
+.hotel-card h4 {
+    color: var(--accent-indigo);
+    margin-bottom: 12px;
+    font-size: 1.15em;
+    font-weight: 500;
+}
+
+/* ============================================
+   LINKS & INTERACTIVE ELEMENTS
+   ============================================ */
+a {
+    color: var(--accent-gold);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    border-bottom: 1px solid transparent;
+}
+
+a:hover {
+    color: var(--accent-sakura);
+    border-bottom-color: var(--accent-sakura);
+}
+
+ul {
+    margin-left: 24px;
+    margin-top: 12px;
+}
+
+li {
+    margin: 12px 0;
+    color: var(--text-secondary);
+}
+
+.map-link {
+    display: inline-block;
+    background: var(--bg-elevated);
+    color: var(--accent-gold);
+    padding: 10px 18px;
+    border-radius: 6px;
+    margin: 8px 8px 8px 0;
+    font-size: 0.9em;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.3s ease;
+}
+
+.map-link:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-gold);
+    box-shadow: 0 2px 12px rgba(201, 169, 97, 0.15);
+    transform: translateY(-1px);
+}
+
+.website-link {
+    display: inline-block;
+    background: var(--bg-elevated);
+    color: var(--accent-gold);
+    padding: 10px 18px;
+    border-radius: 6px;
+    margin: 8px 8px 8px 0;
+    font-size: 0.9em;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.3s ease;
+}
+
+.website-link:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-gold);
+    box-shadow: 0 2px 12px rgba(201, 169, 97, 0.15);
+    transform: translateY(-1px);
+}
+
+.highlight {
+    background: rgba(212, 165, 165, 0.15);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    color: var(--accent-sakura);
+    border: 1px solid rgba(212, 165, 165, 0.25);
+}
+
+.icon {
+    margin-right: 8px;
+}
+
+/* ============================================
+   SEARCH BOX - Refined input
+   ============================================ */
+.search-box {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    font-size: 1em;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+    background: var(--bg-elevated);
+}
+
+.search-box::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* ============================================
+   DISTRICT TAGS
+   ============================================ */
+.district-tag {
+    display: inline-block;
+    background: var(--bg-elevated);
+    color: var(--accent-matcha);
+    padding: 6px 16px;
+    border-radius: 16px;
+    font-size: 0.85em;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-subtle);
+    font-weight: 400;
+    transition: all 0.25s ease;
+}
+
+.district-tag:hover {
+    border-color: var(--accent-matcha);
+    background: rgba(125, 143, 105, 0.1);
+}
+
+/* ============================================
+   LOCATION NUMBERS
+   ============================================ */
+.location-number {
+    display: inline-block;
+    background: var(--accent-matcha);
+    color: var(--bg-primary);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-right: 10px;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+.location-card:hover .location-number {
+    background: var(--accent-gold);
+    transform: scale(1.1);
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-elevated);
+    border-radius: 5px;
+    border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+/* Selection color */
+::selection {
+    background: rgba(201, 169, 97, 0.25);
+    color: var(--text-primary);
+}
+
+/* ============================================
+   LEAFLET MAP CUSTOMIZATION
+   ============================================ */
+.leaflet-container {
+    background: var(--bg-tertiary);
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: 6px;
+    border: 1px solid var(--border-emphasis);
+    box-shadow: 0 4px 20px var(--shadow-medium);
+}
+
+.leaflet-popup-tip {
+    background: var(--bg-secondary);
+}
+
+.custom-marker {
+    background: transparent;
+    border: none;
+}
+
+.leaflet-control-zoom a {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+}
+
+.leaflet-control-zoom a:hover {
+    background: var(--bg-elevated);
+    border-color: var(--accent-gold);
+}
+
+.leaflet-control-attribution {
+    background: rgba(43, 43, 46, 0.9);
+    color: var(--text-tertiary);
+    font-size: 10px;
+    border-radius: 4px;
+}
+
+.leaflet-control-attribution a {
+    color: var(--accent-gold);
+}
+
+/* Highlighted map pins */
+.map-pin-highlighted {
+    background: var(--accent-gold);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 3px solid var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-primary);
+    font-weight: 600;
+    font-size: 16px;
+    animation: pulseRefined 2s infinite;
+    box-shadow: 0 4px 16px rgba(201, 169, 97, 0.5);
+}
+
+@keyframes pulseRefined {
+    0%, 100% {
+        box-shadow: 0 4px 16px rgba(201, 169, 97, 0.5);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 4px 24px rgba(201, 169, 97, 0.7);
+        transform: scale(1.03);
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1024px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .map-panel {
+        position: relative;
+        top: 0;
+        height: 500px;
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+
+    h1 {
+        font-size: 2.5em;
+    }
+
+    .nav-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .content-section {
+        padding: 28px;
+    }
+
+    h2 {
+        font-size: 2em;
+    }
+
+    .tip-card,
+    .location-card,
+    .food-card,
+    .hotel-card {
+        padding: 20px;
+    }
+}
+
+/* ============================================
+   INLINE NOTIFICATION STYLES
+   (for alerts/tips in content)
+   ============================================ */
+p[style*="background: #fff3cd"],
+p[style*="background: #f8f9ff"] {
+    background: var(--bg-elevated) !important;
+    border-left: 3px solid var(--accent-gold) !important;
+    color: var(--text-primary) !important;
+}
