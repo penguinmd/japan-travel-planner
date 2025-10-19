@@ -53,8 +53,11 @@
             </div>
         </nav>
 
-        <!-- GENERAL TIPS -->
-        <section id="tips" class="content-section active">
+        <div class="main-layout">
+            <!-- LEFT: Content Panel -->
+            <div class="content-panel">
+                <!-- GENERAL TIPS -->
+                <section id="tips" class="content-section active">
             <h2>📋 General Tips</h2>
 
             <div class="tip-card">
@@ -627,6 +630,19 @@
                 <a href="https://maps.app.goo.gl/MqEARfKoKxf56u6h9" target="_blank" class="map-link">📍 View on Map</a>
             </div>
         </section>
+            </div>
+            <!-- End of Content Panel -->
+
+            <!-- RIGHT: Map Panel (sticky) -->
+            <div class="map-panel">
+                <div class="map-header">
+                    <h3 class="map-title" id="map-title">Japan Overview</h3>
+                    <p class="map-subtitle" id="map-subtitle">Select a city to view locations</p>
+                </div>
+                <div id="main-map" class="map-container"></div>
+            </div>
+        </div>
+        <!-- End of Main Layout -->
     </div>
 
     <script>
