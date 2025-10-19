@@ -424,3 +424,66 @@
         .leaflet-control-attribution a {
             color: var(--accent-primary);
         }
+
+        /* Location number badges */
+        .location-number {
+            display: inline-block;
+            background: var(--accent-secondary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 8px;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+        }
+
+        /* Enhanced hover effects for location cards */
+        .location-card:hover {
+            border-left-color: var(--accent-primary);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+            cursor: pointer;
+            transform: translateX(8px);
+        }
+
+        .location-card:hover .location-number {
+            background: var(--accent-primary);
+            transform: scale(1.15);
+        }
+
+        /* Highlighted map pin with pulse animation */
+        .map-pin-highlighted {
+            background: var(--accent-primary);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 4px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            animation: pulse 1s infinite;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.6);
+        }
+
+        /* Pulse animation for highlighted pins */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 16px rgba(0, 212, 255, 0.6);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 4px 24px rgba(0, 212, 255, 0.9);
+                transform: scale(1.05);
+            }
+            100% {
+                box-shadow: 0 4px 16px rgba(0, 212, 255, 0.6);
+                transform: scale(1);
+            }
+        }
