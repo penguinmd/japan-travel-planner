@@ -215,6 +215,26 @@ nav {
     box-shadow: 0 0 0 1px rgba(201, 169, 97, 0.2);
 }
 
+.city-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-gold);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.nav-btn.active .city-number {
+    background: white;
+    color: var(--accent-gold);
+}
+
 /* ============================================
    CONTENT SECTIONS - Embrace Ma (negative space)
    ============================================ */

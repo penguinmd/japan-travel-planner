@@ -41,11 +41,11 @@
             <div class="nav-grid">
                 <button class="nav-btn active" onclick="showSection('tips')">General Tips</button>
                 <button class="nav-btn" onclick="showSection('trains')">Trains</button>
-                <button class="nav-btn" onclick="showSection('tokyo')">Tokyo</button>
-                <button class="nav-btn" onclick="showSection('kyoto')">Kyoto</button>
-                <button class="nav-btn" onclick="showSection('kinosaki')">Kinosaki</button>
-                <button class="nav-btn" onclick="showSection('osaka')">Osaka</button>
-                <button class="nav-btn" onclick="showSection('kanazawa')">Kanazawa</button>
+                <button class="nav-btn" onclick="showSection('tokyo')"><span class="city-number">1</span> Tokyo</button>
+                <button class="nav-btn" onclick="showSection('kyoto')"><span class="city-number">2</span> Kyoto</button>
+                <button class="nav-btn" onclick="showSection('osaka')"><span class="city-number">3</span> Osaka</button>
+                <button class="nav-btn" onclick="showSection('kinosaki')"><span class="city-number">4</span> Kinosaki</button>
+                <button class="nav-btn" onclick="showSection('kanazawa')"><span class="city-number">5</span> Kanazawa</button>
                 <button class="nav-btn" onclick="showSection('itinerary-planner')">Itinerary</button>
                 <button class="nav-btn" onclick="showSection('budget-tracker')">Budget</button>
             </div>
@@ -57,32 +57,6 @@
                 <!-- GENERAL TIPS -->
                 <section id="tips" class="content-section active">
             <h2>📋 General Tips</h2>
-
-            <div style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 3px solid var(--accent-gold);">
-                <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.95em;">These tips apply across all cities on your journey:</p>
-                <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">1</span>
-                        <span style="color: var(--text-primary);">Tokyo</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">2</span>
-                        <span style="color: var(--text-primary);">Kyoto</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">3</span>
-                        <span style="color: var(--text-primary);">Osaka</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">4</span>
-                        <span style="color: var(--text-primary);">Kinosaki</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">5</span>
-                        <span style="color: var(--text-primary);">Kanazawa</span>
-                    </div>
-                </div>
-            </div>
 
             <div class="tip-card">
                 <strong>🚶 Always wander off the path</strong>
@@ -133,32 +107,6 @@
         <!-- TRAINS -->
         <section id="trains" class="content-section">
             <h2>🚄 Train Travel</h2>
-
-            <div style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 3px solid var(--accent-gold);">
-                <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.95em;">You'll travel by train between these cities:</p>
-                <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">1</span>
-                        <span style="color: var(--text-primary);">Tokyo</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">2</span>
-                        <span style="color: var(--text-primary);">Kyoto</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">3</span>
-                        <span style="color: var(--text-primary);">Osaka</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">4</span>
-                        <span style="color: var(--text-primary);">Kinosaki</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">5</span>
-                        <span style="color: var(--text-primary);">Kanazawa</span>
-                    </div>
-                </div>
-            </div>
 
             <div class="tip-card">
                 <strong>📱 Download the Suica app</strong>
@@ -946,6 +894,9 @@
             // Add budget section after itinerary section
             const budgetSection = createBudgetSection();
             itinerarySection.parentNode.insertBefore(budgetSection, itinerarySection.nextSibling);
+
+            // Initialize map for default active section (tips)
+            updateMapForSection('tips');
         });
     </script>
 </body>
