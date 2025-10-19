@@ -1,6 +1,15 @@
 // maps.js - Single map instance with city-based updates
 // UPDATED VERSION - ALL LOCATIONS FROM HTML INCLUDED
 
+// Overview locations for General Tips and Trains tabs
+const overviewCities = [
+    { name: "Tokyo", lat: 35.6762, lng: 139.6503, type: "city" },
+    { name: "Kyoto", lat: 35.0116, lng: 135.7681, type: "city" },
+    { name: "Osaka", lat: 34.6937, lng: 135.5023, type: "city" },
+    { name: "Kinosaki", lat: 35.6274, lng: 134.8095, type: "city" },
+    { name: "Kanazawa", lat: 36.5618, lng: 136.6563, type: "city" }
+];
+
 const cityLocations = {
     tokyo: [
         // LOCATIONS/ATTRACTIONS
@@ -141,6 +150,53 @@ function initializeMainMap() {
     mainMapInstance.on('tileerror', function(error) {
         console.warn('Tile loading error:', error);
     });
+}
+
+// Update map to show overview of all cities
+function showOverviewMap() {
+    if (!mainMapInstance) {
+        initializeMainMap();
+    }
+
+    // Clear existing markers
+    currentCityMarkers.forEach(marker => marker.remove());
+    currentCityMarkers = [];
+
+    // Fly to center of Japan
+    mainMapInstance.flyTo([36.2048, 138.2529], 6, {
+        duration: 1.5,
+        easeLinearity: 0.25
+    });
+
+    // Add city markers after animation starts
+    setTimeout(() => {
+        overviewCities.forEach((city, index) => {
+            const marker = L.marker([city.lat, city.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background: var(--accent-gold); width: 40px; height: 40px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">${index + 1}</div>`,
+                    iconSize: [40, 40],
+                    iconAnchor: [20, 40],
+                    popupAnchor: [0, -40]
+                })
+            }).addTo(mainMapInstance);
+
+            // Hover shows tooltip
+            marker.bindTooltip(city.name, {
+                permanent: false,
+                direction: 'top'
+            });
+
+            currentCityMarkers.push(marker);
+        });
+
+        // Fit bounds to show all cities
+        const bounds = L.latLngBounds(overviewCities.map(city => [city.lat, city.lng]));
+        mainMapInstance.fitBounds(bounds, {
+            padding: [80, 80],
+            maxZoom: 7
+        });
+    }, 800);
 }
 
 // Update map to show specific city

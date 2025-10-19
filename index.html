@@ -58,6 +58,32 @@
                 <section id="tips" class="content-section active">
             <h2>📋 General Tips</h2>
 
+            <div style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 3px solid var(--accent-gold);">
+                <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.95em;">These tips apply across all cities on your journey:</p>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">1</span>
+                        <span style="color: var(--text-primary);">Tokyo</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">2</span>
+                        <span style="color: var(--text-primary);">Kyoto</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">3</span>
+                        <span style="color: var(--text-primary);">Osaka</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">4</span>
+                        <span style="color: var(--text-primary);">Kinosaki</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">5</span>
+                        <span style="color: var(--text-primary);">Kanazawa</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="tip-card">
                 <strong>🚶 Always wander off the path</strong>
                 Everything is amazing, and the best part is seeing new things that are not crowded by tons of people.
@@ -107,6 +133,32 @@
         <!-- TRAINS -->
         <section id="trains" class="content-section">
             <h2>🚄 Train Travel</h2>
+
+            <div style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 3px solid var(--accent-gold);">
+                <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.95em;">You'll travel by train between these cities:</p>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">1</span>
+                        <span style="color: var(--text-primary);">Tokyo</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">2</span>
+                        <span style="color: var(--text-primary);">Kyoto</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">3</span>
+                        <span style="color: var(--text-primary);">Osaka</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">4</span>
+                        <span style="color: var(--text-primary);">Kinosaki</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--accent-gold); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">5</span>
+                        <span style="color: var(--text-primary);">Kanazawa</span>
+                    </div>
+                </div>
+            </div>
 
             <div class="tip-card">
                 <strong>📱 Download the Suica app</strong>
@@ -726,12 +778,17 @@
                 mapSubtitle.textContent = `${locations.length} places to visit`;
 
                 updateMapForCity(sectionId);
+            } else if (sectionId === 'tips' || sectionId === 'trains') {
+                // Show overview map with city pins for General Tips and Trains
+                mapTitle.textContent = 'Japan Cities';
+                mapSubtitle.textContent = '5 cities to explore';
+                showOverviewMap();
             } else {
-                // Non-city sections (tips, trains, itinerary-planner, budget-tracker)
+                // Other non-city sections (itinerary-planner, budget-tracker)
                 mapTitle.textContent = 'Japan Overview';
                 mapSubtitle.textContent = 'Select a city to view locations';
 
-                // Reset to Japan overview
+                // Reset to Japan overview without markers
                 if (mainMapInstance) {
                     mainMapInstance.flyTo([36.2048, 138.2529], 6, {
                         duration: 1.5,
