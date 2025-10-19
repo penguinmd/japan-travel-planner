@@ -103,9 +103,21 @@ function createCityMap(cityKey) {
         marker.bindPopup(popupContent);
     });
 
-    // Fit bounds to show all markers
+    // Fit bounds to show all markers with generous padding
     const bounds = L.latLngBounds(locations.map(loc => [loc.lat, loc.lng]));
-    map.fitBounds(bounds, { padding: [50, 50] });
+    map.fitBounds(bounds, {
+        padding: [80, 80],
+        maxZoom: 14  // Prevent zooming in too close
+    });
+
+    // Force map to invalidate size and recalculate after a moment
+    setTimeout(() => {
+        map.invalidateSize();
+        map.fitBounds(bounds, {
+            padding: [80, 80],
+            maxZoom: 14
+        });
+    }, 250);
 }
 
 // Create map HTML structure
@@ -130,7 +142,7 @@ function createCityMapHTML(cityKey) {
             </div>
 
             <!-- Map container -->
-            <div id="map-${cityKey}" style="height: 500px; border-radius: 8px; border: 1px solid var(--border); z-index: 1;"></div>
+            <div id="map-${cityKey}" style="height: 600px; border-radius: 8px; border: 1px solid var(--border); z-index: 1;"></div>
 
             <p style="margin: 12px 0 0 0; font-size: 0.85em; color: var(--text-secondary);">
                 💡 Click any marker on the map to see details and get directions
