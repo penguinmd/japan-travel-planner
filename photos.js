@@ -40,7 +40,7 @@ async function uploadPhoto(locationId, file) {
       locationId,
       filename,
       uploadedBy: auth.user.email,
-      userName: auth.user.name,
+      userName: auth.user.email.split('@')[0],
       caption,
       timestamp: new Date().toISOString()
     });

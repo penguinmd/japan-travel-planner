@@ -7,7 +7,8 @@
 -- Shared trip data table
 CREATE TABLE trip_data (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  favorites JSONB DEFAULT '[]'::jsonb,
+  users JSONB DEFAULT '{}'::jsonb,
+  favorites JSONB DEFAULT '{}'::jsonb,
   comments JSONB DEFAULT '[]'::jsonb,
   itinerary JSONB DEFAULT '{}'::jsonb,
   budget JSONB DEFAULT '{"hotels":[],"food":[],"transport":[],"activities":[],"shopping":[]}'::jsonb,
