@@ -71,11 +71,19 @@ function createCityMap(cityKey) {
         scrollWheelZoom: true
     }).setView([avgLat, avgLng], 13);
 
-    // Add OpenStreetMap tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19
-    }).addTo(map);
+    // Add map tile layer - using CartoDB Dark Matter for dark mode compatibility
+    const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+    });
+
+    tileLayer.addTo(map);
+
+    // Error handling for tile loading
+    tileLayer.on('tileerror', function(error) {
+        console.warn('Tile loading error:', error);
+    });
 
     // Add markers for each location
     locations.forEach((loc, index) => {
