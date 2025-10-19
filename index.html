@@ -28,7 +28,7 @@
                 <p style="color: var(--text-primary); margin-bottom: 12px;">Login to collaborate on this trip!</p>
                 <input type="email" id="email-input" placeholder="Enter your email"
                        style="padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-primary); width: 300px; margin-right: 10px;">
-                <button onclick="handleLogin()" class="nav-btn" style="padding: 12px 24px;">Send Magic Link</button>
+                <button onclick="handleLogin(event)" class="nav-btn" style="padding: 12px 24px;">Send Magic Link</button>
                 <p id="auth-message" style="margin-top: 10px; font-size: 0.9em; color: var(--text-secondary);"></p>
             </div>
             <div id="logged-in-view" style="display: none;">
@@ -686,9 +686,10 @@
     <script src="photos.js"></script>
     <script src="maps.js"></script>
     <script>
-        async function handleLogin() {
+        async function handleLogin(event) {
             const emailInput = document.getElementById('email-input');
             const authMessage = document.getElementById('auth-message');
+            const button = event.target;
             const email = emailInput.value.trim();
 
             if (!email) {
@@ -704,6 +705,11 @@
                 return;
             }
 
+            // Add loading state - disable button and show "Sending..."
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Sending...';
+
             try {
                 await auth.sendMagicLink(email);
                 authMessage.textContent = 'Check your email for the magic link!';
@@ -712,6 +718,10 @@
             } catch (error) {
                 authMessage.textContent = `Error: ${error.message}`;
                 authMessage.style.color = 'var(--accent-secondary)';
+            } finally {
+                // Re-enable button and restore text
+                button.disabled = false;
+                button.textContent = originalText;
             }
         }
 

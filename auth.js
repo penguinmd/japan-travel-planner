@@ -55,6 +55,12 @@ class SupabaseAuth {
     const loggedInView = document.getElementById('logged-in-view');
     const userEmail = document.getElementById('user-email');
 
+    // Add null checks to prevent errors if DOM elements are missing
+    if (!loggedOutView || !loggedInView) {
+      console.warn('Auth UI elements not found');
+      return;
+    }
+
     if (this.user) {
       loggedOutView.style.display = 'none';
       loggedInView.style.display = 'block';
