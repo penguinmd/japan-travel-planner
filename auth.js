@@ -1,59 +1,45 @@
-// auth.js - Supabase Magic Link Authentication
-class SupabaseAuth {
+// auth.js - Simple Shared Password Authentication
+// Password: "Feels Like Fall"
+class SimpleAuth {
   constructor() {
-    this.user = null;
-    this.session = null;
+    this.isLoggedIn = false;
+    this.CORRECT_PASSWORD = "Feels Like Fall";
+    this.STORAGE_KEY = "japan_auth_logged_in";
   }
 
   async init() {
-    // Check for existing session
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      this.session = session;
-      this.user = session.user;
+    // Check if user is already logged in (from localStorage)
+    const storedLogin = localStorage.getItem(this.STORAGE_KEY);
+    if (storedLogin === "true") {
+      this.isLoggedIn = true;
       this.updateUI();
     }
+  }
 
-    // Listen for auth changes
-    supabase.auth.onAuthStateChange((event, session) => {
-      this.session = session;
-      this.user = session?.user || null;
+  async login(password) {
+    if (password === this.CORRECT_PASSWORD) {
+      this.isLoggedIn = true;
+      localStorage.setItem(this.STORAGE_KEY, "true");
       this.updateUI();
-    });
-  }
-
-  async sendMagicLink(email) {
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email,
-      options: {
-        emailRedirectTo: window.location.origin
-      }
-    });
-
-    if (error) {
-      throw new Error(error.message);
+      return true;
+    } else {
+      throw new Error("Incorrect password");
     }
-
-    return true;
   }
 
-  async signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw new Error(error.message);
-
-    this.user = null;
-    this.session = null;
+  async logout() {
+    this.isLoggedIn = false;
+    localStorage.removeItem(this.STORAGE_KEY);
     this.updateUI();
   }
 
   isAuthenticated() {
-    return !!this.user;
+    return this.isLoggedIn;
   }
 
   updateUI() {
     const loggedOutView = document.getElementById('logged-out-view');
     const loggedInView = document.getElementById('logged-in-view');
-    const userEmail = document.getElementById('user-email');
 
     // Add null checks to prevent errors if DOM elements are missing
     if (!loggedOutView || !loggedInView) {
@@ -61,12 +47,9 @@ class SupabaseAuth {
       return;
     }
 
-    if (this.user) {
+    if (this.isLoggedIn) {
       loggedOutView.style.display = 'none';
       loggedInView.style.display = 'block';
-      if (userEmail) {
-        userEmail.textContent = this.user.email;
-      }
     } else {
       loggedOutView.style.display = 'block';
       loggedInView.style.display = 'none';
@@ -75,4 +58,4 @@ class SupabaseAuth {
 }
 
 // Global instance
-const auth = new SupabaseAuth();
+const auth = new SimpleAuth();

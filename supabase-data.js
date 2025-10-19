@@ -1,67 +1,44 @@
-// supabase-data.js - Supabase Data Manager
-// Replaces GitHub-based data-manager.js with Supabase backend
-class SupabaseDataManager {
+// data-manager.js - localStorage-based Data Manager
+// All data stored in browser's localStorage - shared per browser
+class LocalStorageDataManager {
   constructor() {
     this.data = null;
-    this.subscription = null;
+    this.STORAGE_KEY = "japan_trip_data";
   }
 
   async load() {
-    // Try to fetch trip data from Supabase
-    const { data, error } = await supabase
-      .from('trip_data')
-      .select('*')
-      .eq('id', TRIP_DATA_ID)
-      .single();
+    // Try to load data from localStorage
+    const storedData = localStorage.getItem(this.STORAGE_KEY);
 
-    if (error) {
-      console.error('Error loading data from Supabase:', error);
-      // Initialize with empty data structure if doesn't exist
-      this.data = {
-        users: {},
-        favorites: {},
-        comments: [],
-        itinerary: {},
-        budget: { hotels: [], food: [], transport: [], activities: [], shopping: [] },
-        photos: [],
-        lastUpdated: new Date().toISOString()
-      };
+    if (storedData) {
+      try {
+        this.data = JSON.parse(storedData);
+      } catch (error) {
+        console.error('Error parsing stored data:', error);
+        // Initialize with empty data structure if parse fails
+        this.data = this.getEmptyDataStructure();
+      }
     } else {
-      // Convert Supabase data format to match old data-manager structure
-      this.data = {
-        users: data.users || {},
-        favorites: data.favorites || {},
-        comments: data.comments || [],
-        itinerary: data.itinerary || {},
-        budget: data.budget || { hotels: [], food: [], transport: [], activities: [], shopping: [] },
-        photos: data.photos || [],
-        lastUpdated: data.updated_at || new Date().toISOString()
-      };
-    }
-
-    // Add current user if authenticated
-    if (auth.isAuthenticated() && auth.user) {
-      if (!this.data.users[auth.user.email]) {
-        this.data.users[auth.user.email] = {
-          name: auth.user.email.split('@')[0], // Use email prefix as name
-          email: auth.user.email
-        };
-      }
-
-      // Initialize user favorites if not exists
-      if (!this.data.favorites[auth.user.email]) {
-        this.data.favorites[auth.user.email] = [];
-      }
+      // Initialize with empty data structure if no stored data
+      this.data = this.getEmptyDataStructure();
     }
 
     return this.data;
   }
 
-  async save(commitMessage = 'Update trip data') {
-    if (!auth.isAuthenticated()) {
-      throw new Error('Must be logged in to save changes');
-    }
+  getEmptyDataStructure() {
+    return {
+      users: {},
+      favorites: {},
+      comments: [],
+      itinerary: {},
+      budget: { hotels: [], food: [], transport: [], activities: [], shopping: [] },
+      photos: [],
+      lastUpdated: new Date().toISOString()
+    };
+  }
 
+  async save(commitMessage = 'Update trip data') {
     if (!this.data) {
       throw new Error('No data to save');
     }
@@ -69,63 +46,35 @@ class SupabaseDataManager {
     // Update timestamp
     this.data.lastUpdated = new Date().toISOString();
 
-    const { error } = await supabase
-      .from('trip_data')
-      .update({
-        users: this.data.users,
-        favorites: this.data.favorites,
-        comments: this.data.comments,
-        itinerary: this.data.itinerary,
-        budget: this.data.budget,
-        photos: this.data.photos,
-        updated_at: this.data.lastUpdated,
-        updated_by: auth.user.id
-      })
-      .eq('id', TRIP_DATA_ID);
-
-    if (error) {
-      console.error('Error saving data to Supabase:', error);
-      throw new Error(error.message);
+    // Save to localStorage
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
+      return true;
+    } catch (error) {
+      console.error('Error saving data to localStorage:', error);
+      throw new Error('Failed to save data: ' + error.message);
     }
-
-    return true;
   }
 
   subscribeToChanges(callback) {
-    if (this.subscription) {
-      console.warn('Already subscribed to changes');
-      return;
-    }
-
-    this.subscription = supabase
-      .channel('trip_data_changes')
-      .on('postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'trip_data', filter: `id=eq.${TRIP_DATA_ID}` },
-        (payload) => {
-          console.log('Data updated by another user:', payload);
-          // Update local data with new changes
-          if (payload.new) {
-            this.data = {
-              users: payload.new.users || {},
-              favorites: payload.new.favorites || {},
-              comments: payload.new.comments || [],
-              itinerary: payload.new.itinerary || {},
-              budget: payload.new.budget || { hotels: [], food: [], transport: [], activities: [], shopping: [] },
-              photos: payload.new.photos || [],
-              lastUpdated: payload.new.updated_at || new Date().toISOString()
-            };
-            callback(this.data);
-          }
+    // localStorage doesn't have real-time sync across tabs/browsers
+    // But we can listen to storage events for changes in other tabs
+    window.addEventListener('storage', (event) => {
+      if (event.key === this.STORAGE_KEY && event.newValue) {
+        try {
+          this.data = JSON.parse(event.newValue);
+          callback(this.data);
+        } catch (error) {
+          console.error('Error parsing updated data:', error);
         }
-      )
-      .subscribe();
+      }
+    });
   }
 
   unsubscribe() {
-    if (this.subscription) {
-      supabase.removeChannel(this.subscription);
-      this.subscription = null;
-    }
+    // Remove storage event listener if needed
+    // Note: This simple implementation doesn't track the specific listener
+    // In a production app, you'd want to store and remove the specific listener
   }
 
   // Helper methods (keep same interface as old data-manager)
@@ -135,8 +84,13 @@ class SupabaseDataManager {
       return;
     }
 
-    const userEmail = auth.user.email;
-    const favorites = this.data.favorites[userEmail];
+    const userKey = 'shared_user'; // Everyone shares the same favorites in simple mode
+
+    if (!this.data.favorites[userKey]) {
+      this.data.favorites[userKey] = [];
+    }
+
+    const favorites = this.data.favorites[userKey];
     const index = favorites.indexOf(locationId);
 
     if (index === -1) {
@@ -147,11 +101,8 @@ class SupabaseDataManager {
   }
 
   isFavorited(locationId, userEmail = null) {
-    if (!userEmail && auth.isAuthenticated()) {
-      userEmail = auth.user.email;
-    }
-    if (!userEmail) return false;
-    return this.data.favorites[userEmail]?.includes(locationId) || false;
+    const userKey = 'shared_user'; // Everyone shares the same favorites in simple mode
+    return this.data.favorites[userKey]?.includes(locationId) || false;
   }
 
   addComment(locationId, text) {
@@ -162,8 +113,8 @@ class SupabaseDataManager {
     const comment = {
       id: 'c' + Date.now(),
       locationId: locationId,
-      user: auth.user.email,
-      userName: this.data.users[auth.user.email]?.name || auth.user.email.split('@')[0],
+      user: 'shared_user',
+      userName: 'Traveler',
       text: text,
       timestamp: new Date().toISOString(),
       replies: []
@@ -185,7 +136,7 @@ class SupabaseDataManager {
 
     this.data.budget[category].push({
       ...item,
-      addedBy: auth.user.email,
+      addedBy: 'shared_user',
       timestamp: new Date().toISOString()
     });
   }
@@ -203,4 +154,4 @@ class SupabaseDataManager {
 }
 
 // Global data manager instance
-const dataManager = new SupabaseDataManager();
+const dataManager = new LocalStorageDataManager();

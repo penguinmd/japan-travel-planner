@@ -13,8 +13,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
@@ -25,14 +23,14 @@
 
         <div id="auth-container" style="background: var(--bg-secondary); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; border: 1px solid var(--border);">
             <div id="logged-out-view">
-                <p style="color: var(--text-primary); margin-bottom: 12px;">Login to collaborate on this trip!</p>
-                <input type="email" id="email-input" placeholder="Enter your email"
+                <p style="color: var(--text-primary); margin-bottom: 12px;">Enter the shared password to collaborate on this trip!</p>
+                <input type="password" id="password-input" placeholder="Enter password"
                        style="padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-primary); width: 300px; margin-right: 10px;">
-                <button onclick="handleLogin(event)" class="nav-btn" style="padding: 12px 24px;">Send Magic Link</button>
+                <button onclick="handleLogin(event)" class="nav-btn" style="padding: 12px 24px;">Login</button>
                 <p id="auth-message" style="margin-top: 10px; font-size: 0.9em; color: var(--text-secondary);"></p>
             </div>
             <div id="logged-in-view" style="display: none;">
-                <span id="user-email" style="color: var(--text-primary); margin-right: 20px;"></span>
+                <span style="color: var(--text-primary); margin-right: 20px;">Logged in and ready to plan!</span>
                 <button onclick="handleLogout()" class="nav-btn" style="background: linear-gradient(135deg, #ff6b9d, #ff8fab);">Logout</button>
                 <button onclick="saveData()" class="nav-btn" style="margin-left: 10px; background: linear-gradient(135deg, #00d4ff, #00e5ff);">Save Changes</button>
             </div>
@@ -604,7 +602,6 @@
         });
     </script>
     <script src="config.js"></script>
-    <script src="supabase-client.js"></script>
     <script src="supabase-data.js"></script>
     <script src="auth.js"></script>
     <script src="ui-components.js"></script>
@@ -615,34 +612,30 @@
     <script src="map-interactions.js"></script>
     <script>
         async function handleLogin(event) {
-            const emailInput = document.getElementById('email-input');
+            const passwordInput = document.getElementById('password-input');
             const authMessage = document.getElementById('auth-message');
             const button = event.target;
-            const email = emailInput.value.trim();
+            const password = passwordInput.value;
 
-            if (!email) {
-                authMessage.textContent = 'Please enter your email';
+            if (!password) {
+                authMessage.textContent = 'Please enter the password';
                 authMessage.style.color = 'var(--accent-secondary)';
                 return;
             }
 
-            // Basic email validation
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                authMessage.textContent = 'Please enter a valid email';
-                authMessage.style.color = 'var(--accent-secondary)';
-                return;
-            }
-
-            // Add loading state - disable button and show "Sending..."
+            // Add loading state - disable button and show "Logging in..."
             const originalText = button.textContent;
             button.disabled = true;
-            button.textContent = 'Sending...';
+            button.textContent = 'Logging in...';
 
             try {
-                await auth.sendMagicLink(email);
-                authMessage.textContent = 'Check your email for the magic link!';
+                await auth.login(password);
+                authMessage.textContent = 'Successfully logged in!';
                 authMessage.style.color = 'var(--accent-primary)';
-                emailInput.value = '';
+                passwordInput.value = '';
+
+                // Load data after successful login
+                await loadData();
             } catch (error) {
                 authMessage.textContent = `Error: ${error.message}`;
                 authMessage.style.color = 'var(--accent-secondary)';
@@ -655,7 +648,7 @@
 
         async function handleLogout() {
             try {
-                await auth.signOut();
+                await auth.logout();
             } catch (error) {
                 alert(`Error logging out: ${error.message}`);
             }
@@ -714,9 +707,9 @@
             if (auth.isAuthenticated()) {
                 await loadData();
 
-                // Subscribe to real-time changes
+                // Subscribe to storage changes (for syncing across tabs)
                 dataManager.subscribeToChanges((newData) => {
-                    console.log('Data synced from another user');
+                    console.log('Data synced from another tab');
                     // Refresh UI with new data
                     renderUI();
                 });

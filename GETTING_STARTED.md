@@ -8,16 +8,14 @@
 
 ## Quick Start Guide
 
-### IMPORTANT: Supabase Setup Required
+### No Setup Required!
 
-Before using the app, you need to set up Supabase authentication and database. See `SUPABASE_SETUP.md` for detailed instructions.
+The app uses simple password authentication and browser localStorage - no database or server configuration needed!
 
-**Quick Setup:**
-1. Create free Supabase account at https://supabase.com
-2. Create new project
-3. Run the SQL schema from `SUPABASE_SETUP.md`
-4. Update `config.js` with your Supabase URL and anon key
-5. Deploy to Vercel
+**How to start using the app:**
+1. Visit: https://japan-cyan.vercel.app
+2. Enter password: "Feels Like Fall" (case-sensitive)
+3. Start planning your trip!
 
 ## How to Login
 
@@ -26,15 +24,13 @@ Before using the app, you need to set up Supabase authentication and database. S
 1. Go to: https://japan-cyan.vercel.app
 2. You'll see the login section at the top
 
-### Step 2: Magic Link Authentication
+### Step 2: Enter the Shared Password
 
-1. Enter your email address in the login box
-2. Click "Send Magic Link"
-3. Check your email (including spam folder)
-4. Click the magic link in the email
-5. You'll be automatically logged in!
+1. Enter the password: **"Feels Like Fall"** (without quotes, case-sensitive)
+2. Click "Login"
+3. You'll be logged in immediately!
 
-**Note:** No password needed - it's completely passwordless authentication.
+**Note:** The password is case-sensitive. Make sure to capitalize "Feels", "Like", and "Fall".
 
 ### Step 3: Start Planning
 
@@ -51,7 +47,7 @@ Once logged in, you can:
 - **Upload photos** - Share trip photos with the group
 - **Save changes** - Click "Save Changes" button when done
 
-**Real-time Sync:** Changes sync instantly! Other logged-in users see updates immediately.
+**Data Persistence:** Your changes are saved to browser localStorage and persist across sessions!
 
 ## Understanding the Split-Screen Layout
 
@@ -71,45 +67,46 @@ Once logged in, you can:
 - Full touch support
 - Optimized for small screens
 
-## Adding Collaborators
+## Sharing with Others
 
 ### How to Invite Others
 
-Simply share the URL: https://japan-cyan.vercel.app
+Simply share the URL and password:
+
+**Share this with your travel companions:**
+- URL: https://japan-cyan.vercel.app
+- Password: "Feels Like Fall" (case-sensitive)
 
 **Steps for your friend:**
 1. Visit the URL
-2. Enter their email
-3. Click magic link in email
-4. Start collaborating!
+2. Enter the shared password
+3. Start collaborating!
 
-**No special setup required** - anyone with the link can login and collaborate.
+### Important Notes About Data Sharing
 
-### Collaboration Features
-
-- **Real-time updates**: Changes appear instantly for all users
-- **Shared data**: Everyone sees the same favorites, notes, itinerary, budget
-- **User attribution**: See who made the last update
-- **Conflict-free**: Supabase handles concurrent edits automatically
+- **Per-Browser Storage**: Each browser has its own localStorage
+- **Not Real-time**: Changes in one browser don't automatically sync to others
+- **Share Updates**: Use export/import features or share screenshots to keep everyone updated
+- **Device-Specific**: Data on your phone won't sync to your laptop automatically
 
 ## Using the App Features
 
 ### Navigation
 - Use tabs at top to switch between cities and sections
-- "General Tips", "Trains", "Budget", "Itinerary", "Photos" are general sections
+- "General Tips", "Trains", "Budget", "Itinerary" are general sections
 - "Tokyo", "Kyoto", "Osaka", "Kinosaki", "Kanazawa" show city-specific locations
 
 ### Favorites
 - Click star icon on any location card
 - Your favorites are highlighted
-- Click "Save Changes" to persist
-- All users see the same favorites
+- Click "Save Changes" to persist to localStorage
+- Data saved in your browser
 
 ### Comments/Notes
 - Click "Add Note" button on location cards
 - Enter your comment
 - Include your name
-- Shares thoughts with the group
+- Saves to browser localStorage
 
 ### Itinerary Builder
 - Set trip start date
@@ -130,13 +127,13 @@ Simply share the URL: https://japan-cyan.vercel.app
 ### Photos
 - Upload trip photos
 - Add captions
-- Share with all collaborators
+- Stored in browser localStorage
 
 ### Saving Changes
 1. Make your edits
 2. Click "Save Changes" button (top right)
 3. Wait for confirmation message
-4. Changes sync to all users immediately
+4. Changes saved to browser localStorage
 
 ## Mobile Usage
 
@@ -164,22 +161,16 @@ Simply share the URL: https://japan-cyan.vercel.app
 
 ### Login Issues
 
-**Q: Didn't receive magic link**
-- Check spam/junk folder
-- Make sure email is correct
-- Try sending again
-- Check Supabase email settings
+**Q: Password not working**
+- Make sure you're using: "Feels Like Fall" (exact capitalization)
+- It's case-sensitive!
+- No quotes around the password
+- Try copy-pasting: Feels Like Fall
 
-**Q: Magic link expired**
-- Links expire after 1 hour
-- Request a new one
-- Click the newest link in your email
-
-**Q: Can't login at all**
-- Verify Supabase is configured correctly
-- Check browser console for errors
-- Make sure you're using HTTPS URL
-- Try different browser
+**Q: Stay logged in?**
+- Yes! Login state is saved to localStorage
+- You'll stay logged in even after closing browser
+- Only need to login once per browser
 
 ### Map Issues
 
@@ -199,25 +190,25 @@ Simply share the URL: https://japan-cyan.vercel.app
 - Try refreshing the page
 - Works best on desktop (limited on mobile)
 
-### Data Sync Issues
+### Data Storage Issues
 
 **Q: Changes not saving**
 - Make sure you're logged in
 - Click "Save Changes" button
 - Check for error messages
-- Verify Supabase connection
-
-**Q: Don't see friend's changes**
-- Refresh the page
-- Check if friend saved changes
-- Verify both logged in
-- Check browser console
+- Check if localStorage is enabled in browser
 
 **Q: Data disappeared**
 - Check if logged in
-- Verify Supabase database is configured
-- Check if data exists in Supabase dashboard
-- Contact admin if database was reset
+- Verify browser localStorage wasn't cleared
+- Check if you're using same browser
+- Data is browser-specific (won't sync across devices)
+
+**Q: Can't see friend's changes**
+- This is expected! localStorage is per-browser
+- Each person has their own data
+- To share: use screenshots or export features
+- For real-time sync, you'd need a server (like Supabase)
 
 ### General Issues
 
@@ -239,8 +230,8 @@ Simply share the URL: https://japan-cyan.vercel.app
 1. Add all must-visit locations to favorites
 2. Build rough itinerary with daily plans
 3. Add budget items for major expenses
-4. Collaborate with travel companions
-5. Use notes to share research/tips
+4. Share password with travel companions
+5. Use notes to track research/tips
 
 ### During Your Trip
 1. Upload photos as you go
@@ -258,13 +249,6 @@ Simply share the URL: https://japan-cyan.vercel.app
 
 ## Advanced Features
 
-### Keyboard Shortcuts
-- (Currently none - could be added in future)
-
-### URL Parameters
-- App loads to "General Tips" by default
-- No query params currently supported
-
 ### Browser Support
 - Chrome (recommended)
 - Firefox
@@ -272,43 +256,50 @@ Simply share the URL: https://japan-cyan.vercel.app
 - Edge
 - Mobile browsers (iOS Safari, Chrome Android)
 
-## Getting Help
+### localStorage Limits
+- Most browsers: ~5-10MB storage
+- Plenty for trip data
+- If you hit limits, reduce photo uploads
+- Consider exporting/backing up data
 
-### Resources
-- **Technical docs**: See README.md
-- **Supabase setup**: See SUPABASE_SETUP.md
-- **Implementation plan**: See docs/plans/2025-10-18-split-screen-map-redesign.md
+### Data Backup
+Since data is stored in browser localStorage:
+- Consider taking screenshots of important data
+- Copy/paste itinerary and budget to external document
+- localStorage can be cleared if browser data is cleared
+- No automatic cloud backup
 
-### Common Questions
+## Important Reminders
 
-**Q: Is this free?**
-A: Yes! Supabase free tier + Vercel free hosting.
+**Password**: "Feels Like Fall" (case-sensitive)
 
-**Q: Is my data private?**
-A: Data is shared with all authenticated users. Use Row Level Security in Supabase for privacy.
+**Data Storage**:
+- Stored in browser localStorage
+- Persists across browser sessions
+- Not synced to cloud or other devices
+- Cleared if you clear browser data
 
-**Q: Can I use for other trips?**
-A: Yes! Clone the repo and customize for any destination.
-
-**Q: Can I customize the design?**
-A: Yes! Edit styles.css and redeploy.
+**Collaboration**:
+- Share password with travel companions
+- Each person's data is separate (per-browser)
+- Not real-time collaborative (unlike Supabase version)
+- Good for personal use or small groups with manual sync
 
 ## Ready to Start Planning!
 
 You're all set to plan an amazing trip to Japan!
 
 **Quick checklist:**
-- [ ] Supabase configured
-- [ ] App deployed to Vercel
-- [ ] Logged in successfully
-- [ ] Invited collaborators
+- [ ] Visited https://japan-cyan.vercel.app
+- [ ] Logged in with password: "Feels Like Fall"
 - [ ] Explored the split-screen interface
 - [ ] Tested map interactions
 - [ ] Added some favorites
+- [ ] Clicked "Save Changes"
 - [ ] Ready to plan!
 
-Have an amazing trip to Japan! ✨
+Have an amazing trip to Japan!
 
 ---
 
-**Need technical help?** Check README.md or SUPABASE_SETUP.md
+**Need technical help?** Check README.md
