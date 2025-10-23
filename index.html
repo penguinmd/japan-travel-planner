@@ -31,8 +31,11 @@
             </div>
             <div id="logged-in-view" style="display: none;">
                 <span style="color: var(--text-primary); margin-right: 20px;">Logged in and ready to plan!</span>
+                <span id="user-display" style="color: var(--accent-primary); margin-right: 20px; font-weight: bold;"></span>
                 <button onclick="handleLogout()" class="nav-btn" style="background: linear-gradient(135deg, #ff6b9d, #ff8fab);">Logout</button>
                 <button onclick="saveData()" class="nav-btn" style="margin-left: 10px; background: linear-gradient(135deg, #00d4ff, #00e5ff);">Save Changes</button>
+                <button onclick="migrateData()" class="nav-btn" style="margin-left: 10px; background: linear-gradient(135deg, #c9a961, #d4b56d);">Migrate to Database</button>
+                <button onclick="userManager.changeName()" class="nav-btn" style="margin-left: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6);">Change Name</button>
             </div>
         </div>
 
@@ -774,6 +777,8 @@
     <script src="config.js"></script>
     <script src="supabase-data.js"></script>
     <script src="auth.js"></script>
+    <script src="user-manager.js"></script>
+    <script src="api-client.js"></script>
     <script src="ui-components.js"></script>
     <script src="itinerary.js"></script>
     <script src="budget.js"></script>
@@ -850,6 +855,57 @@
             }
         }
 
+        async function migrateData() {
+            if (!auth.isAuthenticated()) {
+                alert('Please log in to migrate data');
+                return;
+            }
+
+            if (!confirm('This will migrate all localStorage data to the database and tag it as "Brix". Continue?')) {
+                return;
+            }
+
+            try {
+                // Get localStorage data
+                const storedData = localStorage.getItem('japan_trip_data');
+
+                if (!storedData) {
+                    alert('No localStorage data found to migrate');
+                    return;
+                }
+
+                const localStorageData = JSON.parse(storedData);
+
+                // Call migration API
+                const response = await fetch('/api/migrate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        localStorageData,
+                        brixName: 'Brix'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(`Migration successful!\n\nRecommendations migrated: ${result.recommendationsMigrated}\nFavorites migrated: ${result.favoritesMigrated}\n\nAll data tagged as: ${result.user.name}`);
+                } else {
+                    alert('Migration failed: ' + result.error);
+                }
+
+            } catch (error) {
+                alert('Error during migration: ' + error.message);
+            }
+        }
+
+        function updateUserDisplay() {
+            const userDisplay = document.getElementById('user-display');
+            if (userDisplay && userManager.isIdentified()) {
+                userDisplay.textContent = `👤 ${userManager.getUserName()}`;
+            }
+        }
+
         function renderUI() {
             if (!dataManager.data) return;
             addInteractiveFeatures();
@@ -873,6 +929,12 @@
         window.addEventListener('DOMContentLoaded', async () => {
             // Initialize auth FIRST
             await auth.init();
+
+            // Initialize user manager
+            await userManager.init();
+
+            // Update user display
+            updateUserDisplay();
 
             // Initialize data AFTER auth is ready
             if (auth.isAuthenticated()) {

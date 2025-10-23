@@ -1,0 +1,14 @@
+{
+  "name": "japan-travel-planner",
+  "version": "1.0.0",
+  "description": "Interactive Japan travel planning app with friend recommendations",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
